@@ -1,0 +1,456 @@
+Test case 1,2,3 from PDF:
+
+Test Case 1:
+
+**server output**
+>>> [Client table updated.]
+{'x': ('x', '127.0.0.1', 3333, True)}
+>>> [Client table updated.]
+{'x': ('x', '127.0.0.1', 3333, True), 'y': ('y', '127.0.0.1', 1111, True)}
+>>> [Client table updated.]
+{'x': ('x', '127.0.0.1', 3333, True), 'y': ('y', '127.0.0.1', 1111, True), 'z': ('z', '127.0.0.1', 1122, True)}
+>>> [Client table updated.]
+{'x': ('x', '127.0.0.1', 3333, False), 'y': ('y', '127.0.0.1', 1111, True), 'z': ('z', '127.0.0.1', 1122, True)}
+>>> [Client table updated.]
+{'x': ('x', '127.0.0.1', 3333, True), 'y': ('y', '127.0.0.1', 1111, True), 'z': ('z', '127.0.0.1', 1122, True)}
+
+
+
+
+
+
+**x output**
+>>> [Welcome, You are registered.]
+>>> send y hi y from x
+>>> [Message received by y.]
+>>> z: hi x from z
+send z hi z from x
+>>> [Message received by z.]
+>>> y: hi x from y
+dereg
+>>> [You are Offline. Bye.]
+>>> reg
+>>> [RegSent]
+>>> >>> [You have offline messages:]
+>>> y: 23:32:21 hi offline x
+>>> z: 23:32:35 hi offline x from z
+
+**y output**
+>>> [Welcome, You are registered.]
+>>> x: hi y from x
+send z hi z from y
+>>> [Message received by z.]
+>>> send x hi x from y
+>>> [Message received by x.]
+>>> z: hi y from z
+send x hi offline x
+>>> [Offline Message sent at 23:32:21 received by the server and saved.]
+>>>  [Offline Message sent at 23:32:21 received by x.]
+
+
+
+
+
+
+
+**z output**
+>>> [Welcome, You are registered.]
+>>> y: hi z from y
+send x hi x from z
+>>> [Message received by x.]
+>>> x: hi z from x
+send y hi y from z
+>>> [Message received by y.]
+>>> send x hi offline x from z
+>>> [Offline Message sent at 23:32:35 received by the server and saved.]
+>>>  [Offline Message sent at 23:32:35 received by x.]
+
+
+
+
+
+
+
+Test Case 2:
+
+
+**server pre-exit**
+>>> [Client table updated.]
+{'x': ('x', '127.0.0.1', 3333, True)}
+>>> [Client table updated.]
+{'x': ('x', '127.0.0.1', 3333, True), 'y': ('y', '127.0.0.1', 1111, True)}
+>>> [Client table updated.]
+{'x': ('x', '127.0.0.1', 3333, True), 'y': ('y', '127.0.0.1', 1111, True), 'z': ('z', '127.0.0.1', 1122, True)}
+
+**x output**
+>>> [Welcome, You are registered.]
+>>> send z this is a discrete message
+>>> [Message received by z.]
+>>>
+
+
+**y output**
+>>> [Welcome, You are registered.]
+>>> dereg
+>>> [Server not responding]
+>>> [Exiting]
+
+
+**z output**
+
+>>> [Welcome, You are registered.]
+>>> x: this is a discrete message
+
+
+
+
+
+Test Case 3:
+
+
+
+**server output**
+>>> [Client table updated.]
+{'x': ('x', '127.0.0.1', 3333, True)}
+>>> [Client table updated.]
+{'x': ('x', '127.0.0.1', 3333, True), 'y': ('y', '127.0.0.1', 1111, True)}
+>>> [Client table updated.]
+{'x': ('x', '127.0.0.1', 3333, True), 'y': ('y', '127.0.0.1', 1111, True), 'z': ('z', '127.0.0.1', 1122, True)}
+>>> [Client table updated.]
+{'x': ('x', '127.0.0.1', 3333, True), 'y': ('y', '127.0.0.1', 1111, True), 'z': ('z', '127.0.0.1', 1122, True), 'a': ('a', '127.0.0.1', 1133, True)}
+>>> [Client table updated.]
+{'x': ('x', '127.0.0.1', 3333, True), 'y': ('y', '127.0.0.1', 1111, True), 'z': ('z', '127.0.0.1', 1122, True), 'a': ('a', '127.0.0.1', 1133, False)}
+>>> [Client table updated.]
+{'x': ('x', '127.0.0.1', 3333, True), 'y': ('y', '127.0.0.1', 1111, True), 'z': ('z', '127.0.0.1', 1122, True), 'a': ('a', '127.0.0.1', 1133, True)}
+
+
+
+
+
+**x output**
+>>> [Welcome, You are registered.]
+>>> send_all yoyoyo everyone
+>>> [Group Message received by Server.]
+>>>
+
+
+**y output**
+>>> [Welcome, You are registered.]
+>>> >>> Group Chat x:  yoyoyo everyone
+send a did u see that?
+>>> [Offline Message sent at 23:39:52 received by the server and saved.]
+>>>  [Offline Message sent at 23:39:52 received by a.]
+
+
+
+
+**z output**
+>>> [Welcome, You are registered.]
+>>> >>> Group Chat x:  yoyoyo everyone
+
+
+**a output**
+>>> [Welcome, You are registered.]
+>>> dereg
+>>> [You are Offline. Bye.]
+>>> reg
+>>> [RegSent]
+>>> >>> [You have offline messages:]
+>>> Group Chat x: 23:39:33 yoyoyo everyone
+>>> y: 23:39:52 did u see that?
+
+
+
+
+
+
+Test Case 4:
+start server
+start client foo 
+start client bar
+
+dereg bar
+chat foo -> bar (message received by server)
+dereg foo
+
+start client baz
+baz send_all 
+
+
+reg bar (offline message received from foo)
+reg foo (offline message received from server "offline message received by foo")
+
+**server output**
+>>> [Client table updated.]
+{'foo': ('foo', '127.0.0.1', 3333, True)}
+>>> [Client table updated.]
+{'foo': ('foo', '127.0.0.1', 3333, True), 'bar': ('bar', '127.0.0.1', 2222, True)}
+>>> [Client table updated.]
+{'foo': ('foo', '127.0.0.1', 3333, True), 'bar': ('bar', '127.0.0.1', 2222, False)}
+>>> [Client table updated.]
+{'foo': ('foo', '127.0.0.1', 3333, False), 'bar': ('bar', '127.0.0.1', 2222, False)}
+>>> [Client table updated.]
+{'foo': ('foo', '127.0.0.1', 3333, False), 'bar': ('bar', '127.0.0.1', 2222, False), 'baz': ('baz', '127.0.0.1', 1111, True)}
+>>> [Client table updated.]
+{'foo': ('foo', '127.0.0.1', 3333, False), 'bar': ('bar', '127.0.0.1', 2222, True), 'baz': ('baz', '127.0.0.1', 1111, True)}
+>>> [Client table updated.]
+{'foo': ('foo', '127.0.0.1', 3333, True), 'bar': ('bar', '127.0.0.1', 2222, True), 'baz': ('baz', '127.0.0.1', 1111, True)}
+
+
+
+**foo output**
+>>> [Welcome, You are registered.]
+>>> send bar hi
+>>> [Offline Message sent at 22:55:29 received by the server and saved.]
+>>> dereg
+>>> [You are Offline. Bye.]
+>>> reg
+>>> [RegSent]
+>>> >>> [You have offline messages:]
+>>> Group Chat baz: 22:56:40 hi everyone
+>>>  [Offline Message sent at 22:55:29 received by bar.]
+
+
+
+
+**bar output**
+
+>>> [Welcome, You are registered.]
+>>> dereg
+>>> [You are Offline. Bye.]
+>>> reg
+>>> [RegSent]
+>>> >>> [You have offline messages:]
+>>> foo: 22:55:29 hi
+>>> Group Chat baz: 22:56:40 hi everyone
+
+
+
+
+
+**baz output**
+>>> [Welcome, You are registered.]
+>>> send_all hi everyone
+>>> [Group Message received by Server.]
+>>>
+
+
+
+
+Test Case 5:
+start server
+start client foo 
+start client bar
+start client baz
+
+foo send_all 
+bar send_all 
+baz send_all 
+
+server exit
+chat bar->foo
+chat bar->baz
+chat foo-> bar 
+
+
+baz send_all (Server Not responding, Exit)
+
+chat bar-> foo
+
+chat bar-> baz (Server Not responding, Exit)
+chat foo -> bar (Server Not responding, Exit)
+
+**server pre-exit output**
+>>> [Client table updated.]
+{'foo': ('foo', '127.0.0.1', 3333, True)}
+>>> [Client table updated.]
+{'foo': ('foo', '127.0.0.1', 3333, True), 'bar': ('bar', '127.0.0.1', 2222, True)}
+>>> [Client table updated.]
+{'foo': ('foo', '127.0.0.1', 3333, True), 'bar': ('bar', '127.0.0.1', 2222, True), 'baz': ('baz', '127.0.0.1', 1111, True)}
+
+
+
+
+
+**foo output**
+>>> [Welcome, You are registered.]
+>>> send_all hi from foooo
+>>> [Group Message received by Server.]
+>>> >>> Group Chat bar:  hi from barrrrr
+>>> Group Chat baz:  hi from bazzzzz
+bar: hi foo priv
+send bar whats up
+>>> [Message received by bar.]
+>>> bar: i think baz died
+send bar no way!
+>>> [No ACK from bar, message sent to server.]
+>>> [Server not responding]
+>>> [Exiting]
+
+
+
+
+
+
+**bar output**
+>>> [Welcome, You are registered.]
+>>> >>> Group Chat foo:  hi from foooo
+send_all hi from barrrrr
+>>> [Group Message received by Server.]
+>>> >>> Group Chat baz:  hi from bazzzzz
+send foo hi foo priv
+>>> [Message received by foo.]
+>>> send baz hi baz priv
+>>> [Message received by baz.]
+>>> foo: whats up
+send foo i think baz died
+>>> [Message received by foo.]
+>>> send baz yo u alive?
+>>> [No ACK from baz, message sent to server.]
+>>> [Server not responding]
+>>> [Exiting]
+
+
+**baz output**
+>>> [Welcome, You are registered.]
+>>> >>> Group Chat foo:  hi from foooo
+>>> Group Chat bar:  hi from barrrrr
+send_all hi from bazzzzz
+>>> [Group Message received by Server.]
+>>> bar: hi baz priv
+send_all are you talking without me smfh
+>>> [Server not responding]
+>>> [Exiting]
+
+
+
+
+
+
+Test Case 6:
+start server
+start client foo 
+start client bar
+start client baz
+
+
+foo dereg
+baz send_all (offline saved for foo)
+baz silent-leaves
+chat bar -> foo
+bar send_all (server sees baz unresponsive, updates table)
+ 
+foo reg (offline_messages: GC message from baz, message from bar, GC message from bar)
+server send baz reciept (no response, rebroadcast tables)
+
+
+**server output**
+>>> [Client table updated.]
+{'foo': ('foo', '127.0.0.1', 3333, True)}
+>>> [Client table updated.]
+{'foo': ('foo', '127.0.0.1', 3333, True), 'bar': ('bar', '127.0.0.1', 2222, True)}
+>>> [Client table updated.]
+{'foo': ('foo', '127.0.0.1', 3333, True), 'bar': ('bar', '127.0.0.1', 2222, True), 'baz': ('baz', '127.0.0.1', 1111, True)}
+>>> [Client table updated.]
+{'foo': ('foo', '127.0.0.1', 3333, False), 'bar': ('bar', '127.0.0.1', 2222, True), 'baz': ('baz', '127.0.0.1', 1111, True)}
+>>> [Client table updated.]
+{'foo': ('foo', '127.0.0.1', 3333, False), 'bar': ('bar', '127.0.0.1', 2222, True), 'baz': ('baz', '127.0.0.1', 1111, False)}
+>>> [Client table updated.]
+{'foo': ('foo', '127.0.0.1', 3333, True), 'bar': ('bar', '127.0.0.1', 2222, True), 'baz': ('baz', '127.0.0.1', 1111, False)}
+
+
+
+**foo output**
+>>> [Welcome, You are registered.]
+>>> dereg
+>>> [You are Offline. Bye.]
+>>> reg
+>>> [RegSent]
+>>> >>> [You have offline messages:]
+>>> Group Chat baz: 23:10:43 Goodbye Everyone.
+>>> bar: 23:11:32 yo when you see this, i think baz died again
+>>> Group Chat bar: 23:11:59 baz if u can hear us, come back
+
+**bar output**
+>>> [Welcome, You are registered.]
+>>> >>> Group Chat baz:  Goodbye Everyone.
+send foo yo when you see this, i think baz died again
+>>> [Offline Message sent at 23:11:32 received by the server and saved.]
+>>> send_all baz if u can hear us, come back
+>>> [Group Message received by Server.]
+>>>  [Offline Message sent at 23:11:32 received by foo.]
+
+
+
+
+**baz output pre-exit**
+>>> [Welcome, You are registered.]
+>>> send_all Goodbye Everyone.
+>>> [Group Message received by Server.]
+>>>
+
+
+
+
+
+
+Test Case 7:
+
+start server
+start client foo 
+start client bar
+
+foo silent-leaves
+bar silent-leaves
+
+start client baz
+
+baz send_all
+baz dereg
+
+start client wag 
+chat wag -> baz
+wag silent-leaves
+
+baz reg
+
+
+
+**server output**
+
+**foo output pre-exit**
+>>> [Welcome, You are registered.]
+>>>
+
+**bar output pre-exit**
+>>> [Welcome, You are registered.]
+>>>
+
+
+**baz output**
+>>> [Welcome, You are registered.]
+>>> send_all yo anyone here
+>>> [Group Message received by Server.]
+>>> dereg
+>>> [You are Offline. Bye.]
+>>> reg
+>>> [RegSent]
+>>> >>> [You have offline messages:]
+>>> wag: 23:28:10 i just joined what up
+
+
+
+**wag output pre-exit**
+>>> [Welcome, You are registered.]
+>>> send baz i just joined what up
+>>> [Offline Message sent at 23:28:10 received by the server and saved.]
+>>>
+
+
+
+
+
+
+
+
+
